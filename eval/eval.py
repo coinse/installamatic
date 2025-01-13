@@ -10,7 +10,7 @@ from typing import Dict, List, Optional, Union
 from install_test.agent.agent import Agent
 from install_test.agent.repair_agent import RepairAgent
 from install_test.consts import EVAL_LOGS, REPO_SETS
-from doc_test.utils import notify
+from install_test.utils import notify
 
 sys.path.append(os.getcwd())
 

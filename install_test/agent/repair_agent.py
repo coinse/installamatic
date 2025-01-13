@@ -12,6 +12,7 @@ from install_test.agent.functions_json import (
     FUNC_READY_TO_FIX,
 )
 from install_test.consts import (
+    BUILD_LOGS,
     DOCKERFILE_DIAGNOSIS_PROMPT_PATH,
     DOCKERFILE_FAILURE_FOLLOWUP_PROMPT_PATH,
     DOCKERFILE_FAILURE_PROMPT_PATH,
@@ -63,12 +64,12 @@ class RepairAgent(Agent):
         ref: Optional[str] = None,
     ) -> Tuple[Literal["success", "failure", "insufficient"], int]:
 
-        build_logs_dir = "logs/build_logs"
-        for file in os.listdir(build_logs_dir):
+        os.makedirs(BUILD_LOGS, exist_ok=True)
+        for file in os.listdir(BUILD_LOGS):
             if repo_name in file:
-                os.remove(os.path.join(build_logs_dir, file))
+                os.remove(os.path.join(BUILD_LOGS, file))
         n = 0
-        build_logs = os.path.join(build_logs_dir, f"{repo_name}-N{n}.log")
+        build_logs = os.path.join(BUILD_LOGS, f"{repo_name}-N{n}.log")
         vmc = VMController(build_logs)
         build_success = test_dockerfile(url, dockerfile, repo_name, vmc=vmc, ref=ref)
 
@@ -101,7 +102,7 @@ class RepairAgent(Agent):
                 json.loads(response["function"]["arguments"])["dockerfile"]
             )
             n += 1
-            build_logs = f"logs/build_logs/{repo_name}-N{n}.log"
+            build_logs = f"{BUILD_LOGS}/{repo_name}-N{n}.log"
             vmc = VMController(build_logs)
             build_success = test_dockerfile(
                 url, dockerfile, repo_name, vmc=vmc, ref=ref

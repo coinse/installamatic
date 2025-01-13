@@ -10,7 +10,7 @@ from difflib import get_close_matches
 from io import TextIOWrapper
 from typing import List, Optional
 
-from install_test.consts import FASTAPI
+from install_test.consts import BUILD_LOGS, FASTAPI
 from install_test.utils import notify
 from git_scraping import get_repository_language
 
@@ -328,7 +328,7 @@ def test_dockerfile(
     print(dockerfile)
 
     if vmc is None:
-        logs = f"logs/build_logs/{repo_name or name}.log"
+        logs = f"{BUILD_LOGS}/{repo_name or name}.log"
         vmc = VMController(logs)
 
     (f"\nattempting to build using dockerfile, logs written to {vmc.logs}.")
